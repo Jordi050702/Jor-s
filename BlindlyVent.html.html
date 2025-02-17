@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Blindly Vent</title>
+    <style>
+        /* Font dan Background Umum */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background-color: #1a1a1a;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header .logo {
+            font-size: 36px;
+            font-weight: bold;
+            color: #f4c300;  /* Ganti logo dengan warna emas */
+        }
+
+        header nav ul li a {
+            text-decoration: none;
+            color: #f4c300;  /* Warna gold untuk link */
+            font-size: 18px;
+        }
+
+        header nav ul li a:hover {
+            color: #e0a100;  /* Warna lebih terang saat hover */
+        }
+
+        /* Main Section */
+        .main-content {
+            padding: 30px;
+            background-color: white;
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        /* Form Login/Register */
+        .form-container input, .form-container select, .form-container button {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        /* Tombol Daftar/Login */
+        .form-container button {
+            background-color: #f4c300;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .form-container button:hover {
+            background-color: #e0a100;
+        }
+
+        /* Curhatan Section */
+        .curhatan-container {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Teks Curhatan */
+        .curhatan-container textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+            border: 2px solid #ccc;
+        }
+
+        .curhatan-container .btn {
+            background-color: #f4c300;
+            color: white;
+            padding: 10px 30px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .curhatan-container .btn:hover {
+            background-color: #e0a100;
+        }
+
+        /* Bagian Teks Curhatan */
+        .curhatan-container p {
+            font-size: 18px;
+            color: #333;
+            margin-top: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 15px;
+        }
+
+        footer p {
+            color: #f4c300;  /* Footer dengan warna emas */
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">Blindly Vent</div>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#" onclick="showAuth('login')">Login</a></li>
+                <li><a href="#" onclick="showAuth('register')">Daftar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        
+        <!-- Form Login/Register -->
+        <div id="login-form" class="auth-container active">
+            <h2>Login</h2>
+            <form onsubmit="event.preventDefault(); loginUser();">
+                <input type="email" id="login-email" placeholder="Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit">Login</button>
+            </form>
+            <p>Belum punya akun? <a href="#" onclick="showAuth('register')">Daftar</a></p>
+        </div>
+
+        <div id="register-form" class="auth-container">
+            <h2>Daftar</h2>
+            <form onsubmit="event.preventDefault(); registerUser();">
+                <input type="email" id="register-email" placeholder="Email" required>
+                <input type="password" id="register-password" placeholder="Password" required>
+                <button type="submit">Daftar</button>
+            </form>
+            <p>Sudah punya akun? <a href="#" onclick="showAuth('login')">Login</a></p>
+        </div>
+
+        <!-- Curhatan Section (Visible after Login) -->
+        <div id="curhatan-section" class="curhatan-container" style="display:none;">
+            <h3>Tulis Curhatanmu</h3>
+            <textarea id="userCurhatan" placeholder="Bagikan perasaanmu di sini..."></textarea>
+
+            <!-- Input for Photo, Video, and Audio -->
+            <input type="file" id="fileUpload" accept="image/*,video/*,audio/*">
+            <button class="btn" onclick="postCurhatan()">Kirim Curhatan</button>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Blindly Vent. Semua hak dilindungi.</p>
+    </footer>
+
+    <script>
+        let loggedIn = false;  // Status login user (simulasi untuk sekarang)
+
+        // Fungsi untuk mengubah tampilan form login atau daftar
+        function showAuth(type) {
+            document.getElementById('login-form').classList.remove('active');
+            document.getElementById('register-form').classList.remove('active');
+            if (type === 'login') {
+                document.getElementById('login-form').classList.add('active');
+            } else if (type === 'register') {
+                document.getElementById('register-form').classList.add('active');
+            }
+        }
+
+        // Fungsi login
+        function loginUser() {
+            loggedIn = true;
+            alert("Login berhasil!");
+            showCurhatanSection();
+        }
+
+        // Fungsi registrasi
+        function registerUser() {
+            alert("Akun berhasil dibuat!");
+            showAuth('login');
+        }
+
+        // Fungsi untuk menampilkan kolom curhatan setelah login
+        function showCurhatanSection() {
+            if (loggedIn) {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('register-form').style.display = 'none';
+                document.getElementById('curhatan-section').style.display = 'block';
+            }
+        }
+
+        // Fungsi untuk memposting curhatan
+        function postCurhatan() {
+            let curhatanText = document.getElementById('userCurhatan').value;
+            let file = document.getElementById('fileUpload').files[0];
+
+            if (curhatanText.trim() === "" && !file) {
+                alert("Harap tulis curhatan atau unggah file.");
+                return;
+            }
+
+            let postContent = `<div class="post">
+                <p>${curhatanText}</p>`;
+
+            if (file) {
+                if (file.type.startsWith('audio/')) {
+                    let audio = document.createElement('audio');
+                    audio.controls = true;
+                    let audioUrl = URL.createObjectURL(file);
+                    audio.src = audioUrl;
+                    postContent += `<p>Audio yang Anda unggah:</p>`;
+                    postContent += audio.outerHTML;
+                } else if (file.type.startsWith('image/')) {
+                    let imgUrl = URL.createObjectURL(file);
+                    postContent += `<img src="${imgUrl}" alt="Gambar" style="max-width: 100%; height: auto;"/>`;
+                } else if (file.type.startsWith('video/')) {
+                    let videoUrl = URL.createObjectURL(file);
+                    postContent += `<video controls><source src="${videoUrl}" type="${file.type}">Browser Anda tidak mendukung video tag.</video>`;
+                }
+            }
+            
+            postContent += `</div>`;
+            document.querySelector('.main-content').innerHTML += postContent;
+            document.getElementById('userCurhatan').value = "";
+            document.getElementById('fileUpload').value = "";
+        }
+    </script>
+
+</body>
+</html>
